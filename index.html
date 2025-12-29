@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Wave</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Progressive Wave</h1>
+            <p>Нажмите на пластинку, чтобы включить радио</p>
+        </div>
+
+        <div class="record-container">
+            <div class="record" id="recordButton">
+                <div class="record-outer-ring"></div>
+
+                <!-- Иконка черепа в центре пластинки -->
+                <div class="record-center">
+                    <img src="img/skull-icon.png" alt="Skull Icon" class="skull-icon" id="skullIcon">
+                    <div class="skull-glow" id="skullGlow"></div>
+                </div>
+
+                <!-- Дорожки пластинки -->
+                <div class="record-grooves">
+                    <div class="groove-1"></div>
+                    <div class="groove-2"></div>
+                    <div class="groove-3"></div>
+                    <div class="groove-4"></div>
+                    <div class="groove-5"></div>
+                    <div class="groove-6"></div>
+                    <div class="groove-7"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="player-controls">
+            <div class="status" id="status">
+                <i class="fas fa-pause" id="statusIcon"></i>
+                <span id="statusText">Радио выключено. Нажмите на пластинку</span>
+            </div>
+
+            <div class="volume-control">
+                <i class="fas fa-volume-down"></i>
+                <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+                <i class="fas fa-volume-up"></i>
+            </div>
+
+            <div class="station-info">
+                <p><i class="fas fa-broadcast-tower"></i> Станция: Progressive Wave</p>
+                <p><i class="fas fa-music"></i> Жанр: От психоделических истоков 70-х до мощного современного
+                    прогрессивного рока и авангардных экспериментов
+                </p>
+                <p><i class="fas fa-stream"></i> Поток: 128 kbps MP3</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Progressive Wave &copy; 2025 | Прямая трансляция 24/7</p>
+            <p class="stream-url">
+                <i class="fas fa-link"></i>
+                <!-- <a href="https://myradio24.org/25968" target="_blank">myradio24.org/25968</a> -->
+            </p>
+        </div>
+    </div>
+
+    <script src="js/player.js"></script>
+</body>
+
+</html>
