@@ -223,7 +223,7 @@ function stopSkullAnimation() {
 // Обработчики событий аудио
 function onAudioPlaying() {
     console.log('✅ Радио запущено успешно');
-    showStatus('Сейчас в эфире: The Progressive Wave', 'success');
+    showStatus('Сейчас в эфире: 100 Hits - Rock', 'success');
 }
 
 function onAudioError(event) {
