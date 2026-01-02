@@ -368,7 +368,7 @@ function updateUI() {
         // Воспроизведение активно
         Elements.recordButton.classList.add('record-playing');
         Elements.statusIcon.className = 'fas fa-play';
-        Elements.statusText.textContent = 'Сейчас в эфире: The Progressive Wave';
+        Elements.statusText.textContent = 'Сейчас в эфире: 100 Hits - Rock';
         Elements.body.classList.add('playing');
         
         // Сохранение трансформации при воспроизведении
@@ -397,7 +397,7 @@ function showStatus(message, type = 'info') {
     
     setTimeout(() => {
         if (AppState.isPlaying) {
-            Elements.statusText.textContent = 'Сейчас в эфире: The Progressive Wave';
+            Elements.statusText.textContent = 'Сейчас в эфире: 100 Hits - Rock';
         }
         Elements.statusText.style.color = originalColor;
     }, 2000);
