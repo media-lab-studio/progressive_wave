@@ -616,3 +616,265 @@ body::before {
     min-width: 160px;
   }
 }
+
+/* ========== СТИЛИ ДЛЯ БЕГУЩЕЙ СТРОКИ С ТРЕКОМ ========== */
+
+/* Контейнер для статуса с бегущей строкой */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.3rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 18px 25px;
+  border-radius: 50px;
+  margin-bottom: 25px;
+  min-height: 65px;
+  position: relative;
+  overflow: hidden;
+}
+
+.status i {
+  color: #ff5e00;
+  font-size: 1.5rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+.playing .status i {
+  animation: pulse 1.5s infinite;
+  color: #00ff88;
+}
+
+/* Контейнер для бегущей строки */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  flex: 1;
+  height: 24px;
+  margin: 0 5px;
+}
+
+/* Сама бегущая строка */
+.marquee-track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 25s linear infinite;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255, 94, 0, 0.3);
+}
+
+/* Пауза анимации при наведении */
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Анимация бегущей строки */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Для очень длинных треков - быстрее анимация */
+.marquee-track.long {
+  animation-duration: 30s;
+}
+
+.marquee-track.very-long {
+  animation-duration: 40s;
+}
+
+/* Текст по умолчанию (когда радио выключено) */
+#statusText {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  padding: 0 10px;
+}
+
+/* Анимация пульсации для иконки play */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+}
+
+/* Эффект при появлении трека */
+.track-appear {
+  animation: trackAppear 0.5s ease-out;
+}
+
+@keyframes trackAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Показ времени обновления трека (опционально) */
+.track-time {
+  position: absolute;
+  bottom: -20px;
+  right: 15px;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.status:hover .track-time {
+  opacity: 1;
+}
+
+/* Адаптивность для бегущей строки */
+@media (max-width: 768px) {
+  .status {
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    gap: 10px;
+  }
+
+  .marquee-track {
+    animation-duration: 20s !important;
+  }
+
+  .marquee-track.long {
+    animation-duration: 25s !important;
+  }
+
+  .marquee-track.very-long {
+    animation-duration: 30s !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .status {
+    padding: 12px 15px;
+    font-size: 1rem;
+    gap: 8px;
+  }
+
+  .status i {
+    font-size: 1.3rem;
+  }
+
+  .marquee-container {
+    height: 20px;
+  }
+}
+
+/* Стили для скрытия стандартного плеера */
+.my_player_energy_wrap {
+  display: none !important;
+}
+
+#my_player {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden !important;
+}
+
+.status-label {
+  color: #ff9d5c;
+  font-weight: 600;
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+/* ========== ПРОСТОЙ ЗОЛОТОЙ ЗАГОЛОВОК ========== */
+
+.header h1 {
+  font-family: "Metal Mania", "Arial Black", "Impact", sans-serif;
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin: 15px 0;
+  padding: 0;
+  letter-spacing: 2px;
+
+  /* Перелив от оранжевого к темно-желтому */
+  background: linear-gradient(
+    45deg,
+    #ff8c00 0%,
+    /* темный оранжевый */ #ffa500 25%,
+    /* оранжевый */ #ffd700 50%,
+    /* золотой */ #daa520 75%,
+    /* золотисто-коричневый */ #b8860b 100% /* темное золото */
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Декоративная линия под заголовком с таким же градиентом */
+.header h1 {
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.header h1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #ff8c00,
+    #ffd700,
+    #b8860b,
+    transparent
+  );
+}
+
+/* Подключаем шрифт */
+@import url("https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap");
+
+/* Альтернативные шрифты если Metal Mania не загрузился */
+.header h1 {
+  font-family: "Metal Mania", "Arial Black", sans-serif;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+  }
+
+  .header h1::after {
+    width: 70%;
+    left: 15%;
+  }
+}
