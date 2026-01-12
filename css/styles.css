@@ -92,6 +92,12 @@ body::before {
   color: #a0a0ff;
 }
 
+.info p {
+  font-size: 0.9rem;
+  opacity: 0.4;
+  color: #a0a0ff;
+}
+
 /* Контейнер пластинки */
 .record-container {
   position: relative;
