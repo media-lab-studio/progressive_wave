@@ -115,7 +115,7 @@ async function getCurrentTrackAndPlaylist() {
         );
         updatePlaylistNameUI();
       } else {
-        AppState.currentPlaylist = "Unknown";
+        AppState.currentPlaylist = "Rock / Metal / Alternative";
         console.warn("⚠️ Название плейлиста не найдено");
         updatePlaylistNameUI();
       }
@@ -129,14 +129,14 @@ async function getCurrentTrackAndPlaylist() {
       };
     } else {
       Elements.currentTrackText.textContent = "Информация о треке недоступна";
-      AppState.currentPlaylist = "Unknown";
+      AppState.currentPlaylist = "Rock / Metal / Alternative";
       updatePlaylistNameUI();
       return null;
     }
   } catch (error) {
     console.error("❌ Ошибка при получении данных:", error);
     Elements.currentTrackText.textContent = "Ошибка загрузки";
-    AppState.currentPlaylist = "Error Loading";
+    AppState.currentPlaylist = "Rock / Metal / Alternative";
     updatePlaylistNameUI();
     return null;
   }
