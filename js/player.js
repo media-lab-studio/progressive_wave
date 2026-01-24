@@ -11,12 +11,8 @@ const AppState = {
   audio: null,
   volume: CONFIG.defaultVolume,
   currentTrack: "",
-  currentPlaylist: "", // Добавлено для хранения названия плейлиста
   trackUpdateInterval: null,
-  playlistUpdateInterval: null, // Добавлено для обновления плейлиста
   lastUpdateTime: null,
-  wakeLock: null,
-  isWakeLockSupported: false,
 };
 
 // DOM элементы
@@ -31,21 +27,11 @@ const Elements = {
   marqueeContainer: document.getElementById("marqueeContainer"),
   marqueeTrack: document.getElementById("marqueeTrack"),
   currentTrackText: document.getElementById("currentTrackText"),
-  playlistName: document.getElementById("playlist-name"), // Добавлено для плейлиста
 };
 
 // Инициализация приложения
-async function initApp() {
+function initApp() {
   console.log("💀 EternalRock Radio - Skull Edition 💀");
-
-  // Проверяем поддержку Wake Lock API
-  AppState.isWakeLockSupported = "wakeLock" in navigator;
-
-  if (AppState.isWakeLockSupported) {
-    console.log("✅ Wake Lock API поддерживается");
-  } else {
-    console.warn("⚠️ Wake Lock API не поддерживается");
-  }
 
   // Установка начального состояния
   updateUI();
@@ -58,9 +44,6 @@ async function initApp() {
 
   // Проверка наличия иконки
   checkSkullIcon();
-
-  // Получаем начальные данные (трек и плейлист)
-  await getCurrentTrackAndPlaylist();
 }
 
 // Проверка наличия иконки черепа
@@ -77,27 +60,32 @@ function checkSkullIcon() {
   };
 }
 
-// Функция для получения текущего трека и плейлиста (объединенная)
-async function getCurrentTrackAndPlaylist() {
+// Функция для получения текущего трека
+async function getCurrentTrack() {
   try {
     const apiUrl = `https://myradio24.com/users/${CONFIG.radioId}/status.json`;
+
     const response = await fetch(apiUrl);
     const data = await response.json();
 
     if (data && data.song) {
-      // 1. Обрабатываем текущий трек
       let trackInfo = data.song.trim();
+
+      // Сохраняем трек в состоянии
       AppState.currentTrack = trackInfo;
       AppState.lastUpdateTime = new Date();
 
-      // Обновляем текст трека
+      // Устанавливаем текст трека
       Elements.currentTrackText.textContent = trackInfo;
 
-      // Настраиваем скорость анимации
+      // Настраиваем скорость анимации в зависимости от длины трека
       const trackLength = trackInfo.length;
       let animationClass = "";
+
       if (trackLength > 60) animationClass = "long";
       if (trackLength > 80) animationClass = "very-long";
+
+      // Устанавливаем класс для анимации
       Elements.marqueeTrack.className = "marquee-track " + animationClass;
 
       // Добавляем эффект появления
@@ -106,104 +94,41 @@ async function getCurrentTrackAndPlaylist() {
         Elements.currentTrackText.classList.remove("track-appear");
       }, 500);
 
-      // 2. Обрабатываем плейлист
-      if (data.playlist) {
-        AppState.currentPlaylist = data.playlist.trim();
-        console.log(
-          "✅ Название плейлиста получено:",
-          AppState.currentPlaylist,
-        );
-        updatePlaylistNameUI();
-      } else {
-        AppState.currentPlaylist = "Rock / Metal / Alternative";
-        console.warn("⚠️ Название плейлиста не найдено");
-        updatePlaylistNameUI();
-      }
-
       console.log("🎵 Трек обновлен:", trackInfo);
-      console.log("📁 Плейлист:", AppState.currentPlaylist);
-
-      return {
-        track: trackInfo,
-        playlist: AppState.currentPlaylist,
-      };
+      return trackInfo;
     } else {
       Elements.currentTrackText.textContent = "Информация о треке недоступна";
-      AppState.currentPlaylist = "Rock / Metal / Alternative";
-      updatePlaylistNameUI();
       return null;
     }
   } catch (error) {
-    console.error("❌ Ошибка при получении данных:", error);
-    Elements.currentTrackText.textContent = "Ошибка загрузки";
-    AppState.currentPlaylist = "Rock / Metal / Alternative";
-    updatePlaylistNameUI();
+    console.error("❌ Ошибка при получении трека:", error);
+    Elements.currentTrackText.textContent = "Ошибка загрузки трека";
     return null;
   }
 }
 
-// Функция для обновления названия плейлиста в UI
-function updatePlaylistNameUI() {
-  if (!AppState.currentPlaylist) return;
+// Функция для обновления трека с интервалом
+function startTrackUpdates() {
+  // Получаем трек сразу при включении
+  getCurrentTrack();
 
-  // Форматируем название (заменяем нижние подчеркивания на пробелы)
-  const formattedName = AppState.currentPlaylist.replace(/_/g, " ");
-
-  // Обновляем элемент плейлиста, если он существует
-  if (Elements.playlistName) {
-    // Убираем text-transform: uppercase и сохраняем обычный регистр
-    Elements.playlistName.textContent = formattedName;
-    Elements.playlistName.style.textTransform = "none"; // Убираем верхний регистр
-
-    // Убираем лишние стили, оставляем только цвет
-    Elements.playlistName.style.fontWeight = "normal";
-    Elements.playlistName.style.letterSpacing = "normal";
-    Elements.playlistName.style.padding = "0";
-    Elements.playlistName.style.borderRadius = "0";
-    Elements.playlistName.style.background = "transparent";
-    Elements.playlistName.style.border = "none";
-    Elements.playlistName.style.display = "inline"; // Обычный inline текст
-    Elements.playlistName.style.marginLeft = "5px"; // Небольшой отступ
-    Elements.playlistName.style.fontSize = "inherit"; // Наследуем размер шрифта
-    Elements.playlistName.style.textShadow = "none"; // Убираем тень
-
-    // Оставляем только цвет (как в CSS был #ff9d5c)
-    Elements.playlistName.style.color = "#ff9d5c";
-
-    // Добавляем анимацию обновления
-    Elements.playlistName.classList.remove("playlist-update");
-    void Elements.playlistName.offsetWidth; // Перезапуск анимации
-    Elements.playlistName.classList.add("playlist-update");
-
-    // Убираем класс анимации через 0.5 секунд
-    setTimeout(() => {
-      Elements.playlistName.classList.remove("playlist-update");
-    }, 500);
-  }
-}
-
-// Функция для обновления треков и плейлиста с интервалом
-function startTrackAndPlaylistUpdates() {
-  // Получаем данные сразу при включении
-  getCurrentTrackAndPlaylist();
-
-  // Очищаем старые интервалы, если есть
+  // Очищаем старый интервал, если есть
   if (AppState.trackUpdateInterval) {
     clearInterval(AppState.trackUpdateInterval);
   }
 
   // Устанавливаем интервал обновления (каждые 30 секунд)
-  AppState.trackUpdateInterval = setInterval(getCurrentTrackAndPlaylist, 30000);
+  AppState.trackUpdateInterval = setInterval(getCurrentTrack, 30000);
 
-  console.log("🔄 Запущено обновление данных каждые 30 секунд");
+  console.log("🔄 Запущено обновление треков каждые 30 секунд");
 }
 
-// Функция для остановки обновления
-function stopTrackAndPlaylistUpdates() {
+// Функция для остановки обновления треков
+function stopTrackUpdates() {
   if (AppState.trackUpdateInterval) {
     clearInterval(AppState.trackUpdateInterval);
     AppState.trackUpdateInterval = null;
-    console.log("⏹️ Обновление данных остановлено");
+    console.log("⏹️ Обновление треков остановлено");
   }
 }
 
@@ -220,76 +145,21 @@ function setupEventListeners() {
 
   // Эффекты при наведении на пластинку
   setupHoverEffects();
-
-  // Слушаем события видимости страницы для Wake Lock
-  if (AppState.isWakeLockSupported) {
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-  }
-}
-
-// Обработчик изменения видимости страницы
-function handleVisibilityChange() {
-  if (document.hidden && AppState.wakeLock !== null && AppState.isPlaying) {
-    console.log("Страница скрыта, но Wake Lock продолжает работать");
-  }
-}
-
-// Активация Wake Lock
-async function enableWakeLock() {
-  if (!AppState.isWakeLockSupported) {
-    console.log("Wake Lock API не поддерживается, пропускаем");
-    return;
-  }
-
-  try {
-    if (AppState.wakeLock !== null) {
-      console.log("Wake Lock уже активирован");
-      return;
-    }
-
-    AppState.wakeLock = await navigator.wakeLock.request("screen");
-
-    AppState.wakeLock.addEventListener("release", () => {
-      console.log("Wake Lock был освобожден");
-    });
-
-    console.log("✅ Wake Lock активирован");
-  } catch (err) {
-    console.error(`❌ Ошибка активации Wake Lock: ${err.name}, ${err.message}`);
-    AppState.wakeLock = null;
-  }
-}
-
-// Деактивация Wake Lock
-async function disableWakeLock() {
-  if (!AppState.isWakeLockSupported || AppState.wakeLock === null) {
-    return;
-  }
-
-  try {
-    await AppState.wakeLock.release();
-    AppState.wakeLock = null;
-    console.log("✅ Wake Lock деактивирован");
-  } catch (err) {
-    console.error(
-      `❌ Ошибка деактивации Wake Lock: ${err.name}, ${err.message}`,
-    );
-  }
 }
 
 // Переключение воспроизведения
-async function togglePlayback() {
+function togglePlayback() {
   if (AppState.isPlaying) {
-    await stopPlayback();
+    stopPlayback();
   } else {
-    await startPlayback();
+    startPlayback();
   }
 
   updateUI();
 }
 
 // Запуск воспроизведения
-async function startPlayback() {
+function startPlayback() {
   try {
     AppState.audio = new Audio(CONFIG.streamUrl);
     AppState.audio.volume = AppState.volume;
@@ -301,28 +171,33 @@ async function startPlayback() {
     AppState.audio.addEventListener("ended", onAudioEnded);
 
     // Запуск воспроизведения
-    await AppState.audio.play();
+    AppState.audio
+      .play()
+      .then(() => {
+        AppState.isPlaying = true;
 
-    AppState.isPlaying = true;
+        // Запускаем обновление треков
+        startTrackUpdates();
 
-    // Запускаем обновление треков и плейлиста
-    startTrackAndPlaylistUpdates();
-
-    // Активируем Wake Lock
-    await enableWakeLock();
-
-    updateUI();
-    startSkullAnimation();
+        updateUI();
+        startSkullAnimation();
+      })
+      .catch((error) => {
+        console.error("❌ Ошибка воспроизведения:", error);
+        showError("Не удалось подключиться к радио");
+        AppState.isPlaying = false;
+        updateUI();
+      });
   } catch (error) {
-    console.error("❌ Ошибка воспроизведения:", error);
-    showError("Не удалось подключиться к радио");
+    console.error("❌ Ошибка создания аудио:", error);
+    showError("Ошибка инициализации плеера");
     AppState.isPlaying = false;
     updateUI();
   }
 }
 
 // Остановка воспроизведения
-async function stopPlayback() {
+function stopPlayback() {
   if (AppState.audio) {
     AppState.audio.pause();
     AppState.audio.currentTime = 0;
@@ -337,11 +212,8 @@ async function stopPlayback() {
 
   AppState.isPlaying = false;
 
-  // Деактивируем Wake Lock
-  await disableWakeLock();
-
-  // Останавливаем обновление
-  stopTrackAndPlaylistUpdates();
+  // Останавливаем обновление треков
+  stopTrackUpdates();
 
   updateUI();
   stopSkullAnimation();
@@ -379,8 +251,7 @@ function onAudioError(event) {
   AppState.isPlaying = false;
   updateUI();
   stopSkullAnimation();
-  stopTrackAndPlaylistUpdates();
-  disableWakeLock();
+  stopTrackUpdates();
 }
 
 function onAudioEnded() {
@@ -388,8 +259,7 @@ function onAudioEnded() {
   AppState.isPlaying = false;
   updateUI();
   stopSkullAnimation();
-  stopTrackAndPlaylistUpdates();
-  disableWakeLock();
+  stopTrackUpdates();
 }
 
 // Управление громкостью
@@ -427,7 +297,9 @@ function handleKeyboard(event) {
 
     case "KeyR":
       event.preventDefault();
-      getCurrentTrackAndPlaylist(); // Обновляем и трек, и плейлист
+      if (AppState.isPlaying) {
+        getCurrentTrack();
+      }
       break;
   }
 }
@@ -564,24 +436,6 @@ function showError(message) {
   }, 3000);
 }
 
-// Fallback для иконки черепа (если изображение не загрузилось)
-function createFallbackSkull() {
-  const fallbackSVG = `
-    <svg width="100%" height="100%" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="40" fill="#222" stroke="#ff5e00" stroke-width="2"/>
-      <circle cx="35" cy="45" r="8" fill="#fff"/>
-      <circle cx="65" cy="45" r="8" fill="#fff"/>
-      <circle cx="35" cy="45" r="4" fill="#000"/>
-      <circle cx="65" cy="45" r="4" fill="#000"/>
-      <path d="M30,65 Q50,80 70,65" stroke="#ff5e00" stroke-width="3" fill="none"/>
-      <ellipse cx="50" cy="80" rx="15" ry="5" fill="#ff5e00"/>
-    </svg>
-  `;
-
-  Elements.skullIcon.outerHTML = fallbackSVG;
-  console.log("✅ Fallback иконка черепа создана");
-}
-
 // Запуск при загрузке страницы
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initApp);
@@ -592,11 +446,11 @@ if (document.readyState === "loading") {
 // Информация для консоли
 console.log(
   "%c💀 EternalRock Radio - Skull Edition 💀",
-  "color: #ff5e00; font-size: 18px; font-weight: bold; text-shadow: 0 0 10px #ff5e00;",
+  "color: #ff5e00; font-size: 18px; font-weight: bold; text-shadow: 0 0 10px #ff5e00;"
 );
 console.log("%cУправление:", "color: #ff9d5c; font-weight: bold;");
 console.log("• Нажмите на пластинку или пробел для воспроизведения/паузы");
 console.log("• Стрелки Вверх/Вниз для регулировки громкости");
 console.log("• M для отключения звука");
-console.log("• R для обновления информации о текущем треке и плейлисте");
+console.log("• R для обновления информации о текущем треке");
 console.log("%cПоток: " + CONFIG.streamUrl, "color: #00ff88;");
