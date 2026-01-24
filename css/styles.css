@@ -15,7 +15,7 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   /* АБСОЛЮТНЫЙ ПУТЬ от корня проекта */
-  background-image: url(https://media-lab-studio.github.io/eternalrock/img/rockсollage.png);
+  /* background-image: url(https://media-lab-studio.github.io/eternalrock/img/rockсollage.png); */
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
