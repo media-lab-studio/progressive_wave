@@ -135,9 +135,10 @@ body::before {
 /* ================== CENTER ================== */
 .record-center {
   position: absolute;
-  inset: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  
+
   width: 35%;
   height: 35%;
   border-radius: 50%;
@@ -176,7 +177,7 @@ body::before {
     transparent 70%
   );
   opacity: 0;
-  transform: scaleY(0.6);
+  transform: scale(1.05);
   z-index: 9;
 }
 
@@ -283,7 +284,7 @@ body::before {
 @media (max-width: 768px) {
   .record-container { width: 280px; height: 280px; }
   .record-center { width: 40%; height: 40%; }
-  .skull-icon { width: 70%; }
+  .skull-icon { width: 60%; }
   .station-info { flex-direction: column; }
 }
 
