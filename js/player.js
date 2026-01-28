@@ -77,6 +77,31 @@ function checkSkullIcon() {
   };
 }
 
+// функция для управления анимацией на мобильных
+function setupMobileAnimation() {
+  // Проверяем ширину экрана
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isMobile) {
+    // На мобильных делаем анимацию быстрее
+    const marqueeTrack = Elements.marqueeTrack;
+    if (marqueeTrack) {
+      const trackLength = AppState.currentTrack.length;
+      
+      if (trackLength > 40) {
+        marqueeTrack.style.animationDuration = '20s';
+      } else if (trackLength > 60) {
+        marqueeTrack.style.animationDuration = '25s';
+      } else {
+        marqueeTrack.style.animationDuration = '15s';
+      }
+    }
+  }
+}
+
+// при изменении размера окна
+window.addEventListener('resize', setupMobileAnimation);
+
 // Функция для получения текущего трека и плейлиста (объединенная)
 async function getCurrentTrackAndPlaylist() {
   try {
@@ -149,6 +174,8 @@ async function getCurrentTrackAndPlaylist() {
     return null;
   }
 }
+
+ setupMobileAnimation();
 
 // Функция для обновления названия плейлиста в UI
 function updatePlaylistNameUI() {
@@ -355,25 +382,32 @@ async function stopPlayback() {
   stopSkullAnimation();
 }
 
-// Запуск анимации черепа
+// Запуск анимации черепа - ИСПРАВЛЕННАЯ ВЕРСИЯ
 function startSkullAnimation() {
+  // Убираем все классы и стили, которые могли сбить центрирование
+  Elements.skullIcon.classList.remove("skull-hover");
+  Elements.skullIcon.classList.remove("skull-click");
+  
+  // Добавляем только один класс для анимации
   Elements.skullIcon.classList.add("skull-icon-playing");
   Elements.skullGlow.classList.add("skull-glow-playing");
 
-  // Плавное появление свечения
-  Elements.skullGlow.style.opacity = "0";
-  setTimeout(() => {
-    Elements.skullGlow.style.opacity = "0.6";
-  }, 100);
+  // Используем CSS класс для свечения вместо прямого стиля
+  Elements.skullGlow.classList.add("skull-glow-active");
 }
 
-// Остановка анимации черепа
+// Остановка анимации черепа - ИСПРАВЛЕННАЯ ВЕРСИЯ
 function stopSkullAnimation() {
   Elements.skullIcon.classList.remove("skull-icon-playing");
   Elements.skullGlow.classList.remove("skull-glow-playing");
-
-  // Плавное исчезновение свечения
-  Elements.skullGlow.style.opacity = "0";
+  
+  // Убираем все дополнительные классы
+  Elements.skullIcon.classList.remove("skull-hover");
+  Elements.skullIcon.classList.remove("skull-click");
+  Elements.skullGlow.classList.remove("skull-glow-active");
+  
+  // Возвращаем обычный фильтр через CSS класс
+  Elements.skullIcon.classList.add("skull-default");
 }
 
 // Обработчики событий аудио
@@ -474,39 +508,43 @@ function toggleMute() {
   }
 }
 
-// Эффекты при наведении
+// Эффекты при наведении - ИСПРАВЛЕННАЯ ВЕРСИЯ
 function setupHoverEffects() {
   Elements.recordButton.addEventListener("mousedown", () => {
     if (!AppState.isPlaying) {
-      Elements.recordButton.style.transform = "scale(0.97)";
-      Elements.skullIcon.style.filter =
-        "drop-shadow(0 0 12px rgba(255, 94, 0, 0.9))";
+      Elements.recordButton.classList.add("record-click");
+      Elements.skullIcon.classList.remove("skull-hover");
+      Elements.skullIcon.classList.add("skull-click");
     }
   });
 
   Elements.recordButton.addEventListener("mouseup", () => {
     if (!AppState.isPlaying) {
-      Elements.recordButton.style.transform = "scale(1.02)";
-      Elements.skullIcon.style.filter =
-        "drop-shadow(0 0 10px rgba(255, 94, 0, 0.7))";
+      Elements.recordButton.classList.remove("record-click");
+      Elements.recordButton.classList.add("record-hover");
+      Elements.skullIcon.classList.remove("skull-click");
+      Elements.skullIcon.classList.add("skull-hover");
     }
   });
 
   Elements.recordButton.addEventListener("mouseenter", () => {
     if (!AppState.isPlaying) {
-      Elements.recordButton.style.transform = "scale(1.02)";
-      Elements.skullIcon.style.filter =
-        "drop-shadow(0 0 10px rgba(255, 94, 0, 0.7))";
-      Elements.skullGlow.style.opacity = "0.3";
+      Elements.recordButton.classList.add("record-hover");
+      Elements.skullIcon.classList.add("skull-hover");
+      Elements.skullGlow.classList.add("skull-glow-hover");
     }
   });
 
   Elements.recordButton.addEventListener("mouseleave", () => {
     if (!AppState.isPlaying) {
-      Elements.recordButton.style.transform = "scale(1)";
-      Elements.skullIcon.style.filter =
-        "drop-shadow(0 0 8px rgba(255, 94, 0, 0.7))";
-      Elements.skullGlow.style.opacity = "0";
+      Elements.recordButton.classList.remove("record-hover", "record-click");
+      Elements.skullIcon.classList.remove("skull-hover", "skull-click");
+      Elements.skullGlow.classList.remove("skull-glow-hover");
+      
+      // Если радио выключено, добавляем дефолтный класс
+      if (!AppState.isPlaying) {
+        Elements.skullIcon.classList.add("skull-default");
+      }
     }
   });
 }
@@ -519,6 +557,10 @@ function updateUI() {
     Elements.statusIcon.className = "fas fa-play";
     Elements.body.classList.add("playing");
 
+    // Убираем классы наведения при включении
+    Elements.recordButton.classList.remove("record-hover", "record-click");
+    Elements.skullIcon.classList.remove("skull-hover", "skull-click", "skull-default");
+
     // Показываем бегущую строку, скрываем обычный текст
     Elements.statusText.style.display = "none";
     Elements.marqueeContainer.style.display = "block";
@@ -527,24 +569,19 @@ function updateUI() {
     if (!AppState.currentTrack) {
       Elements.currentTrackText.textContent = "Загрузка информации о треке...";
     }
-
-    // Сохранение трансформации при воспроизведении
-    Elements.recordButton.style.transform = "scale(1)";
   } else {
     // Воспроизведение остановлено - показываем обычный текст
     Elements.recordButton.classList.remove("record-playing");
     Elements.statusIcon.className = "fas fa-pause";
     Elements.body.classList.remove("playing");
 
+    // Добавляем дефолтный класс для черепа
+    Elements.skullIcon.classList.add("skull-default");
+
     // Скрываем бегущую строку, показываем обычный текст
     Elements.statusText.style.display = "block";
     Elements.marqueeContainer.style.display = "none";
     Elements.statusText.textContent = "Радио выключено. Нажмите на пластинку";
-
-    // Сброс эффектов черепа
-    Elements.skullIcon.style.filter =
-      "drop-shadow(0 0 8px rgba(255, 94, 0, 0.7))";
-    Elements.skullGlow.style.opacity = "0";
   }
 }
 
