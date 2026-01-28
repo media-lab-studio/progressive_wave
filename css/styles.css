@@ -837,6 +837,28 @@ body::before {
   #statusText {
     font-size: 0.95rem;
   }
+  
+  /* Уменьшаем размер шрифта в расписании чтобы помещалось в одну строку */
+  .schedule-list li {
+    font-size: 0.8rem; /* Уменьшаем шрифт */
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем если не помещается */
+    text-overflow: ellipsis; /* Добавляем троеточие если обрезается */
+  }
+  
+  /* Выравниваем иконки часов в одну вертикальную линию */
+  .schedule-list i {
+    width: 16px; /* Фиксированная ширина */
+    text-align: center; /* Центрируем иконку */
+    display: inline-block; /* Чтобы работала фиксированная ширина */
+    flex-shrink: 0; /* Не сжимается */
+  }
+  
+  .schedule-list li {
+    display: flex;
+    align-items: flex-start; /* Выравниваем по верхнему краю */
+    gap: 8px; /* Отступ между иконкой и текстом */
+  }
 }
 
 @media (max-width: 600px) {
@@ -867,6 +889,17 @@ body::before {
     font-size: 0.9rem;
     animation-duration: 20s !important; /* Быстрее анимация */
   }
+  
+  /* Еще больше уменьшаем шрифт расписания */
+  .schedule-list li {
+    font-size: 0.75rem;
+  }
+  
+  /* Корректируем ширину иконок для маленьких экранов */
+  .schedule-list i {
+    width: 14px;
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -893,6 +926,16 @@ body::before {
   #statusText {
     font-size: 0.85rem;
   }
+  
+  /* Минимальный размер шрифта для расписания */
+  .schedule-list li {
+    font-size: 0.7rem;
+  }
+  
+  .schedule-list i {
+    font-size: 0.7rem;
+    width: 12px; /* Еще меньше ширина на очень узких экранах */
+  }
 }
 
 /* Для очень маленьких экранов - упрощаем */
@@ -918,6 +961,16 @@ body::before {
   .marquee-container {
     width: 100%;
     text-align: center;
+  }
+  
+  /* Самый маленький шрифт для расписания */
+  .schedule-list li {
+    font-size: 0.65rem;
+  }
+  
+  .schedule-list i {
+    width: 10px;
+    font-size: 0.65rem;
   }
 }
 
