@@ -57,6 +57,12 @@
             <span id="statusText" style="display: none;">Радио выключено. Нажмите на пластинку</span>
         </div>
 
+        <!-- После блока status добавьте новый блок -->
+        <div class="next-track-container" id="nextTrackContainer" style="display: none;">
+            <span class="next-track-label">Далее в эфире:</span>
+            <div class="next-track-text" id="nextTrackText">Загрузка...</div>
+        </div>
+
         <div class="volume-control">
             <i class="fas fa-volume-down"></i>
             <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
