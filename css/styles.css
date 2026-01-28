@@ -838,6 +838,59 @@ body::before {
   #statusText {
     font-size: 0.95rem;
   }
+  
+  /* Адаптивность расписания - список под станцией */
+  .station-info {
+    flex-direction: column; /* Вертикальное расположение */
+    padding: 15px;
+  }
+
+  .station-left {
+    order: 1; /* Станция, жанр, поток - первый */
+  }
+
+  .station-right {
+    order: 2; /* Расписание - второй */
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 94, 0, 0.3);
+  }
+
+  .station-right h4 {
+    text-align: left;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    padding-left: 24px; /* 16px (ширина иконки) + 8px (gap) */
+  }
+  
+  /* Улучшаем читаемость пунктов расписания */
+  .schedule-list li {
+    display: flex;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem; /* Немного меньше шрифт */
+  }
+
+  .schedule-list li:last-child {
+    border-bottom: none;
+  }
+
+  .schedule-list i {
+    color: #ff5e00;
+    font-size: 0.75rem;
+    margin-top: 2px; /* Выравнивание иконки */
+    width: 16px; /* Фиксированная ширина для выравнивания */
+    flex-shrink: 0; /* Не сжимается */
+  }
+  
+  /* Чтобы текст был в одну строку с троеточием если не помещается */
+  .schedule-list li span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
 }
 
 @media (max-width: 600px) {
@@ -868,6 +921,16 @@ body::before {
     font-size: 0.9rem;
     animation-duration: 20s !important; /* Быстрее анимация */
   }
+  
+  /* Уменьшаем расписание на очень узких экранах */
+  .schedule-list li {
+    font-size: 0.8rem;
+  }
+  
+  .schedule-list i {
+    font-size: 0.7rem;
+    width: 14px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -894,6 +957,22 @@ body::before {
   #statusText {
     font-size: 0.85rem;
   }
+  
+  /* Еще меньше расписание */
+  .station-right h4 {
+    font-size: 1rem;
+    padding-left: 20px;
+  }
+  
+  .schedule-list li {
+    font-size: 0.75rem;
+    padding: 5px 0;
+  }
+  
+  .schedule-list i {
+    font-size: 0.65rem;
+    width: 12px;
+  }
 }
 
 /* Для очень маленьких экранов - упрощаем */
@@ -919,6 +998,22 @@ body::before {
   .marquee-container {
     width: 100%;
     text-align: center;
+  }
+  
+  /* Минимальный размер для расписания */
+  .schedule-list li {
+    font-size: 0.7rem;
+    padding: 4px 0;
+  }
+  
+  .schedule-list i {
+    font-size: 0.6rem;
+    width: 10px;
+  }
+  
+  .station-right h4 {
+    font-size: 0.9rem;
+    padding-left: 18px;
   }
 }
 
