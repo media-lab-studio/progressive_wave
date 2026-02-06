@@ -46,6 +46,14 @@
         </canvas>
         <!-- END VISUALIZER -->
 
+        <!-- Ссылка для скачивания Android приложения -->
+        <div class="download-app-container">
+            <a href="apk/EternalRock.apk" download="EternalRock.apk" class="download-app-btn">
+                <i class="fab fa-android"></i> Скачать Android приложение "EternalRock"
+                <!-- <small class="download-size">(APK файл, ~25 МБ)</small> -->
+            </a>
+        </div>
+
         <div class="status" id="status">
             <i class="fas fa-play" id="statusIcon"></i>
             <span class="status-label">Сейчас в эфире:</span>
@@ -59,8 +67,15 @@
 
         <!-- После блока status добавьте новый блок -->
         <div class="next-track-container" id="nextTrackContainer" style="display: none;">
-          <span class="next-track-label">Далее в эфире:</span>&nbsp;
-        <div class="next-track-text" id="nextTrackText">Загрузка...</div>
+            <span class="next-track-label">Далее в эфире:</span>&nbsp;
+            <div class="next-track-text" id="nextTrackText">Загрузка...</div>
+            <button class="next-track-toggle" id="nextTrackToggle" aria-label="Показать очередь">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+
+        <div class="next-tracks-accordion" id="nextTracksAccordion">
+            <ul class="next-tracks-list" id="nextTracksList"></ul>
         </div>
 
         <div class="volume-control">
@@ -91,15 +106,14 @@
             <div class="station-right">
                 <h4>Расписание</h4>
                 <ul class="schedule-list">
-                    <li><i class="fas fa-clock"></i> Best Rock Duets 08:00 – 09:00</li>
-                    <li><i class="fas fa-clock"></i> Classic Rock 09:00 – 10:00</li>
-                    <li><i class="fas fa-clock"></i> Legends of Rock 'n' Roll 10:00 – 12:00</li>
+                    <li><i class="fas fa-clock"></i> Legends of Rock 'n' Roll 08:00 – 10:00</li>
+                    <li><i class="fas fa-clock"></i> Classic Rock 10:00 – 12:00</li>
                     <li><i class="fas fa-clock"></i> Alternative Punk 12:00 – 14:00</li>
                     <li><i class="fas fa-clock"></i> Classic Rock 14:00 – 16:00</li>
-                    <li><i class="fas fa-clock"></i> Nu Metal 16:00 – 17:00</li>
-                    <li><i class="fas fa-clock"></i> Classic Rock 17:00 – 19:00</li>
+                    <li><i class="fas fa-clock"></i> Nu Metal 16:00 – 18:00</li>
+                    <li><i class="fas fa-clock"></i> Classic Rock 18:00 – 19:00</li>
                     <li><i class="fas fa-clock"></i> Legends of Rock 'n' Roll 19:00 – 20:00</li>
-                    <li><i class="fas fa-clock"></i> Thrash Metal 21:00 – 22:00</li>
+                    <li><i class="fas fa-clock"></i> Best Rock Duets 20:00 – 22:00</li>
                     <li><i class="fas fa-clock"></i> Best Rock Ballads 23:00</li>
                 </ul>
             </div>
