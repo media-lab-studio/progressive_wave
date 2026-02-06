@@ -1038,55 +1038,91 @@ body::before {
   }
 }
 
-/* Стили для кнопки скачивания приложения */
-.download-app-container {
+/* ========== СТИЛИ ДЛЯ КНОПКИ СКАЧИВАНИЯ ANDROID ПРИЛОЖЕНИЯ ========== */
+
+/* Контейнер для кнопки скачивания */
+.android-download-container {
   text-align: center;
-  margin: 25px 0;
-  padding: 0 15px;
+  margin: 20px 0 25px 0;
+  width: 100%;
 }
 
-.download-app-btn {
+/* Стили кнопки скачивания Android приложения */
+.android-download-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: linear-gradient(135deg, #3ddc84 0%, #34a853 100%);
-  color: white;
-  padding: 14px 28px;
-  border-radius: 50px;
+  padding: 14px 30px;
+  border-radius: 30px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 17px;
+  font-size: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(61, 220, 132, 0.35);
+  min-width: 250px;
+  max-width: 90%;
   border: none;
   cursor: pointer;
-  position: relative;
-  min-width: 300px;
-  flex-wrap: wrap;
+  background: linear-gradient(135deg, #3ddc84, #34a853);
+  color: white;
+  box-shadow: 0 4px 20px rgba(61, 220, 132, 0.35);
+  text-align: center;
+  line-height: 1.2;
 }
 
-.download-app-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(61, 220, 132, 0.5);
-  background: linear-gradient(135deg, #34a853 0%, #3ddc84 100%);
+.android-download-btn:hover {
+  background: linear-gradient(135deg, #34a853, #2e7d32);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(61, 220, 132, 0.5);
 }
 
-.download-app-btn:active {
+.android-download-btn:active {
   transform: translateY(0);
 }
 
-.download-app-btn i {
-  font-size: 22px;
-  flex-shrink: 0;
+.android-download-btn i {
+  font-size: 1.3rem;
 }
 
-.download-size {
-  font-size: 12px;
-  font-weight: normal;
-  opacity: 0.9;
-  display: block;
-  width: 100%;
-  margin-top: 5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+/* Медиа-запросы для адаптивности кнопки скачивания */
+@media (max-width: 768px) {
+  .android-download-container {
+    margin: 15px 0 20px 0;
+  }
+
+  .android-download-btn {
+    font-size: 0.95rem;
+    padding: 13px 25px;
+    min-width: 280px;
+  }
+
+  .android-download-btn i {
+    font-size: 1.2rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .android-download-btn {
+    font-size: 0.9rem;
+    padding: 12px 22px;
+    min-width: 260px;
+    gap: 10px;
+  }
+
+  .android-download-btn i {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .android-download-btn {
+    font-size: 0.85rem;
+    padding: 11px 20px;
+    min-width: 240px;
+  }
+
+  .android-download-btn i {
+    font-size: 1rem;
+  }
+}
+
