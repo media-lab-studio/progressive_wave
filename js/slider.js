@@ -134,9 +134,16 @@ class SlideShow {
     }
   }
 
-  nextSlide() {
-    this.showSlide(this.currentSlide + 1);
-  }
+nextSlide() {
+  // выбираем случайный слайд
+  let randomIndex;
+  
+  do {
+    randomIndex = Math.floor(Math.random() * this.slides.length);
+  } while (randomIndex === this.currentSlide && this.slides.length > 1);
+  
+  this.showSlide(randomIndex);
+}
 
   prevSlide() {
     this.showSlide(this.currentSlide - 1);
